@@ -8,7 +8,7 @@ int main()
     char title[150];
 
     printf("Type the title of the article: ");
-    fgets(title, 150, stdin);
+    fgets(title, 150, stdin); // gets the title from the user
 
 
     char delim[] = " "; // deliminator for strtok
@@ -16,13 +16,13 @@ int main()
     char *titleSplit[15]; // the split title to reference each word
     size_t numberOfWords = 0; // counts number of words in titleSplit to use in for loops
     size_t counter = 0;
-    char *pos;
+    char *pos; // is used for strchr to replace \n with \0 (a null character)
 
     token = strtok(title, delim); // tokenizes title and puts the value into token
 
     while(token != NULL){ // does the same for the rest of the title
 
-        if((pos=strchr(token, '\n')) != NULL){
+        if((pos=strchr(token, '\n')) != NULL){ // replaces the \n at the end of var title when it sees it in var token (only happens at the last word; is caused by fgets at the very start)
             *pos = '\0';
         }
         else{
