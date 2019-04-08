@@ -18,7 +18,7 @@ int main()
     size_t counter = 0;
     char *pos; // is used for strchr to replace \n with \0 (a null character)
 
-    token = strtok(title, delim); // tokenizes title and puts the value into token
+    token = strtok(title, delim); // tokenizes/splits title and puts the value into token
 
     while(token != NULL){ // does the same for the rest of the title
 
