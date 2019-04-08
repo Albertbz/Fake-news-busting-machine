@@ -13,7 +13,7 @@ int main()
 
     char delim[] = " "; // deliminator for strtok
     char *token; // token for splitting
-    char *titleSplit[15]; // the split title to reference each word
+    char *titleSplit[15]; // the split title so it's possible to reference each word later
     size_t numberOfWords = 0; // counts number of words in titleSplit to use in for loops
     size_t counter = 0;
     char *pos; // is used for strchr to replace \n with \0 (a null character)
