@@ -18,7 +18,7 @@ int main()
     size_t counter = 0;
     char *pos;
 
-    token = strtok(title, delim); // tokenizes title at puts the value into token
+    token = strtok(title, delim); // tokenizes title and puts the value into token
 
     while(token != NULL){ // does the same for the rest of the title
 
