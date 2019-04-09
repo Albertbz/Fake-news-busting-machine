@@ -11,6 +11,8 @@ int main()
     fgets(title, 150, stdin); // gets the title from the user
 
 
+    double percentFake;
+    double percentReal;
     char delim[] = " "; // deliminator for strtok
     char *token; // token for splitting
     char *titleSplit[15]; // the split title so it's possible to reference each word later
@@ -25,12 +27,11 @@ int main()
         if((pos=strchr(token, '\n')) != NULL){ // replaces the \n at the end of var title when it sees it in var token (only happens at the last word; is caused by fgets at the very start)
             *pos = '\0';
         }
-        else{
-            int tokenLength = strlen(token); // gets the length of the token/word for the for loop
 
-            for(size_t i = 0; i < tokenLength; i++){
-                token[i] = tolower(token[i]); // makes the tokens/words of the title lowercase to be comparable with database later
-            }
+        int tokenLength = strlen(token); // gets the length of the token/word for the for loop
+
+        for(size_t i = 0; i < tokenLength; i++){
+            token[i] = tolower(token[i]); // makes the tokens/words of the title lowercase to be comparable with database later
         }
 
         titleSplit[counter] = token; // puts the value of token into titleSplit
@@ -41,46 +42,96 @@ int main()
         numberOfWords++;
     }
 
-    char *allWords[150000];
-    char allCharacters[1000000];
-    int numberOfWordsNews = 0;
+    char *allWordsFake[20000];
+    char *allWordsReal[20000];
+    char allCharactersFake[200000];
+    char allCharactersReal[200000];
+    double numberOfWordsFake = 0;
+    double numberOfWordsReal = 0;
 
-    FILE *fPointer;                                            // opens and reads file
-    fPointer = fopen("fakeNewsHeadlinesLowercase.txt", "r");
+    FILE *fPointer;                         // opens and reads file with fake news
+    fPointer = fopen("fakeNews.txt", "r");
 
     while(!feof(fPointer)){
-        fgets(allCharacters, 1000000, fPointer); // gets all characters from the file
+        fgets(allCharactersFake, 200000, fPointer); // gets all characters from the file with fake news
     }
 
-    fclose(fPointer); // closes file
+    fclose(fPointer); // closes file with fake news
 
-    token = strtok(allCharacters, delim); // changes var token to split all words from the file
+    //////////////////////////////
+
+    fPointer = fopen("realNews.txt", "r"); // opens and reads file with real news
+
+    while(!feof(fPointer)){
+        fgets(allCharactersReal, 200000, fPointer); // gets all characters from the file with real news
+    }
+
+    fclose(fPointer); // closes file with real news
+
+    token = strtok(allCharactersFake, delim); // changes var token to split all words from the file with fake news
 
     counter = 0;
 
     while(token != NULL){
-        allWords[counter] = token;
+        allWordsFake[counter] = token;
 
         token = strtok(NULL, delim);
 
         counter++;
-        numberOfWordsNews++;
+        numberOfWordsFake++;
     }
 
-    int occurrencesOfAllWords = 0;
+    int occurrencesOfAllWordsFake = 0;
 
     for(size_t i = 0; i < numberOfWords; i++){ // for loop to check for occurrences of words from title in the file
         int occurrencesOfWord = 0;
 
-        for(size_t j = 0; j < numberOfWordsNews; j++){
-            if(strcmp(titleSplit[i], allWords[j]) == 0){
+        for(size_t j = 0; j < numberOfWordsFake; j++){
+            if(strcmp(titleSplit[i], allWordsFake[j]) == 0){
                 occurrencesOfWord++;
-                occurrencesOfAllWords++;
+                occurrencesOfAllWordsFake++;
             }
         }
-        printf("\nOccurrences of \"%s\": %d \n", titleSplit[i], occurrencesOfWord); // prints occurrences of each word from the title in the file
+        printf("\nOccurrences of \"%s\" in fake news file: %d \n", titleSplit[i], occurrencesOfWord); // prints occurrences of each word from the title in the file
     }
-    printf("\n\nOccurrences of all words: %d \n", occurrencesOfAllWords); // prints total occurrences of all the words from the title in the file
+    printf("\n\nOccurrences of all words in fake news file: %d \n", occurrencesOfAllWordsFake); // prints total occurrences of all the words from the title in the file
+    percentFake = ((occurrencesOfAllWordsFake/numberOfWordsFake)*100);
+    printf("Occurrences in percent: %.2lf%% \n\n", percentFake);
+
+    ////////////////////////////////////
+
+    token = strtok(allCharactersReal, delim); // changes var token to split all words from the file with real news
+
+    counter = 0;
+
+    while(token != NULL){
+        allWordsReal[counter] = token;
+
+        token = strtok(NULL, delim);
+
+        counter++;
+        numberOfWordsReal++;
+    }
+
+    int occurrencesOfAllWordsReal = 0;
+
+    for(size_t i = 0; i < numberOfWords; i++){ // for loop to check for occurrences of words from title in the file
+        int occurrencesOfWord = 0;
+
+        for(size_t j = 0; j < numberOfWordsReal; j++){
+            if(strcmp(titleSplit[i], allWordsReal[j]) == 0){
+                occurrencesOfWord++;
+                occurrencesOfAllWordsReal++;
+            }
+        }
+        printf("\nOccurrences of \"%s\" in real news file: %d \n", titleSplit[i], occurrencesOfWord); // prints occurrences of each word from the title in the file
+    }
+    printf("\n\nOccurrences of all words in real news file: %d \n", occurrencesOfAllWordsReal); // prints total occurrences of all the words from the title in the file
+    percentReal = ((occurrencesOfAllWordsReal/numberOfWordsReal)*100);
+    printf("Occurrences in percent: %.2lf%% \n\n", percentReal);
+
+    printf("Fake news: %lf \nReal news: %lf \n", numberOfWordsFake, numberOfWordsReal);
+
 
     return 0;
 }
